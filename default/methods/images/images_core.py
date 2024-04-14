@@ -206,7 +206,7 @@ def annotation_example_toggle(project_string_id):
 
         request_image_id = reqiest_image.get('id', None)
         if request_image_id is None:
-            return json.dumps("image_id is None"), 400, {'ContentType': 'application/json'}
+            return json.dumps("image_id is None"), 400, {'ContentType': 'application/json', 'Content-Type': 'application/json'}
 
         image = Image.get_by_id(s, request_image_id)
         image.is_annotation_example = not image.is_annotation_example
