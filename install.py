@@ -199,7 +199,8 @@ class DiffgramInstallTool:
         bucket = None
         bcolors.printcolor('Testing Connection...', bcolors.OKBLUE)
         try:
-            file = open(account_path, mode = 'r')
+            with open(account_path, mode = 'r') as file:
+                pass
             credentials = service_account.Credentials.from_service_account_file(account_path)
             client = storage.Client(credentials = credentials)
             bucket = client.get_bucket(bucket_name)
