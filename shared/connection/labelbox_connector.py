@@ -90,7 +90,7 @@ class LabelboxConnector(Connector):
     def __get_frames(self, opts):
         frames_url = opts['frames_url']
         headers = {'Authorization': f"Bearer {self.auth_data['client_secret']}"}
-        ndjson_response = requests.get(frames_url, headers = headers)
+        ndjson_response = requests.get(frames_url, headers = headers, timeout=60)
         frames_data = ndjson_response.text.split('\n')
         result = [json.loads(elm) for elm in frames_data if elm != '']
         return {'result': result}

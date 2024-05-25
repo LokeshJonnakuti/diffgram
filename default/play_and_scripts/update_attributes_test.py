@@ -44,6 +44,6 @@ headers = {
     "authorization": f"Basic {auth.decode()}"
 }
 
-response = requests.post(url, json = payload, headers = headers)
+response = requests.post(url, json = payload, headers = headers, timeout=60)
 
 print(response.text)
