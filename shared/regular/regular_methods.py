@@ -1,12 +1,12 @@
 # OPENCORE - ADD
 import time
-import random
 from shared.settings import settings
 import requests
 import json
 import datetime
 import traceback
 from shared.helpers.sessionMaker import AfterCommitAction
+import secrets
 
 
 # TODO would like to have this as a mixin
@@ -180,7 +180,7 @@ def loop_forever_with_random_load_balancing(
 
     if logger: logger.info(log_start_message)
     while True:
-        deferred_time = random.randint(thread_sleep_time_min, thread_sleep_time_max)
+        deferred_time = secrets.SystemRandom().randint(thread_sleep_time_min, thread_sleep_time_max)
         time.sleep(deferred_time)
         if logger: logger.info(log_heartbeat_message + str(deferred_time))
         try:

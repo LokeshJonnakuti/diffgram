@@ -13,9 +13,9 @@ from shared.utils.job_dir_sync_utils import JobDirectorySyncManager
 from shared.regular.regular_methods import commit_with_rollback
 from shared.utils.job_launch_utils import task_template_label_attach
 from shared.utils.source_control.file.file_transfer_core import file_transfer_core
-import random
 import uuid
 from shared.regular import regular_log
+import secrets
 
 data_gen_spec_list = [
     {
@@ -200,10 +200,10 @@ class DiffgramDataMocker:
             project_id = task.project_id,
             task_id = task.id,
             member_created_id = member_created_id,
-            x_min = random.randint(0, 100),
-            y_min = random.randint(0, 100),
-            x_max = random.randint(200, 300),
-            y_max = random.randint(200, 400),
+            x_min = secrets.SystemRandom().randint(0, 100),
+            y_min = secrets.SystemRandom().randint(0, 100),
+            x_max = secrets.SystemRandom().randint(200, 300),
+            y_max = secrets.SystemRandom().randint(200, 400),
             width = None,
             height = None,
             label_file_id = label_file_id,
@@ -289,7 +289,7 @@ class DiffgramDataMocker:
         if default_dir is None:
             # Fallback to default directory on project.
             default_dir = project.directory_default
-        rand_int_0_255 = lambda: random.randint(0, 255)
+        rand_int_0_255 = lambda: secrets.SystemRandom().randint(0, 255)
         for i in range(0, NUM_LABELS):
             r = rand_int_0_255()    # red
             g = rand_int_0_255()    # green
