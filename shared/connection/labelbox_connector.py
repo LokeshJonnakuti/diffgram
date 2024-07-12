@@ -5,14 +5,8 @@ from shared.connection.connectors.connectors_base import Connector, with_connect
 from shared.regular import regular_log
 from dataclasses import dataclass
 import labelbox
-import requests
 from functools import wraps
-from shared.annotation import Annotation_Update
-import hmac
-import hashlib
 from shared.database.external.external import ExternalMap
-from shared.database.task.job.job_working_dir import JobWorkingDir
-from shared.utils.task import task_complete
 from shared.ingest import packet
 from shared.regular.regular_log import result_has_error
 from shared.regular import regular_log
@@ -24,6 +18,7 @@ from shared.database.project_migration.project_migration import ProjectMigration
 import colorsys
 import uuid
 from shared.regular import regular_methods
+from security import safe_requests
 
 SUPPORTED_IMAGE_MIMETYPES = ['image/jpg', 'image/png', 'image/jpeg', 'image/webp', 'image/svg', 'image/tiff',
                              'image/tif']
@@ -90,7 +85,7 @@ class LabelboxConnector(Connector):
     def __get_frames(self, opts):
         frames_url = opts['frames_url']
         headers = {'Authorization': f"Bearer {self.auth_data['client_secret']}"}
-        ndjson_response = requests.get(frames_url, headers = headers)
+        ndjson_response = safe_requests.get(frames_url, headers = headers)
         frames_data = ndjson_response.text.split('\n')
         result = [json.loads(elm) for elm in frames_data if elm != '']
         return {'result': result}

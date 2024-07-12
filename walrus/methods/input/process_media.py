@@ -1,28 +1,24 @@
 import uuid
 
 from methods.regular.regular_api import *
+from security import safe_requests
 
 try:
     from methods.video.video_preprocess import Video_Preprocess
 except Exception as exception:
     print("Fail, Video_Preprocess: Could not import", exception)
-
-import requests
 import threading
 import tempfile
 import csv
 import gc
 import shutil
 from urllib.parse import urlsplit
-from random import randrange
 
 from werkzeug.utils import secure_filename
 
 from imageio import imwrite
 from imageio import imread
 from shared.image_tools import imresize
-
-from shared.database.user import UserbaseProject
 from shared.utils.memory_checks import check_and_wait_for_memory
 from shared.database.input import Input
 from shared.database.video.video import Video
@@ -33,13 +29,12 @@ from shared.utils.task import task_complete
 from shared.data_tools_core import Data_tools
 
 global Update_Input
-from methods.input.input_update import Update_Input
 from shared.database.model.model_run import ModelRun
 from shared.database.audio.audio_file import AudioFile
 from shared.database.model.model import Model
 from shared.utils import job_dir_sync_utils
 from shared.database.task.job.job import Job
-from tenacity import retry, wait_random_exponential, stop_after_attempt, wait_fixed
+from tenacity import retry, wait_random_exponential, stop_after_attempt
 from shared.database.text_file import TextFile
 from shared.database.task.job.job_working_dir import JobWorkingDir
 from shared.model.model_manager import ModelManager
@@ -51,7 +46,6 @@ import numpy as np
 from shared.regular.regular_log import log_has_error
 import os
 from shared.feature_flags.feature_checker import FeatureChecker
-from shared.utils.singleton import Singleton
 from methods.text_data.text_tokenizer import TextTokenizer
 from shared.utils.instance.transform_instance_utils import rotate_instance_dict_90_degrees
 from shared.ingest.allowed_ingest_extensions import images_allowed_file_names, \
@@ -2143,7 +2137,7 @@ class Process_Media():
             return
 
         split_url = urlsplit(self.input.url)
-        response = requests.get(self.input.url, stream = True)
+        response = safe_requests.get(self.input.url, stream = True)
 
         if response.status_code != 200:
             self.input.status = "failed"

@@ -1,13 +1,11 @@
-import datetime
 
 from shared.auth.OAuth2Provider import OAuth2ClientBase
 from shared.settings import settings
 import requests
-import boto3
 import base64
 from shared.shared_logger import get_shared_logger
 import urllib
-import jwt
+from security import safe_requests
 
 logger = get_shared_logger()
 
@@ -100,7 +98,7 @@ class CognitoDiffgramClient(OAuth2ClientBase):
         """
         url = f'{settings.OAUTH2_PROVIDER_HOST}oauth2/userInfo'
         auth_value = f'Bearer {access_token}'
-        response = requests.get(url = url, headers = {'Authorization': auth_value})
+        response = safe_requests.get(url = url, headers = {'Authorization': auth_value})
         if response.status_code == 200:
             return response.json()
         else:

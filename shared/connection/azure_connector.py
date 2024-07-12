@@ -2,11 +2,10 @@
 import threading
 import io
 import mimetypes
-import requests
 import traceback
 import datetime
 from shared.regular import regular_input
-from azure.storage.blob import BlobBlock, BlobServiceClient, ContentSettings, StorageStreamDownloader
+from azure.storage.blob import BlobServiceClient, ContentSettings
 from azure.storage.blob._models import BlobSasPermissions
 from azure.storage.blob._shared_access_signature import BlobSharedAccessSignature
 from shared.helpers import sessionMaker
@@ -21,6 +20,7 @@ from shared.database.export import Export
 from shared.export.export_utils import generate_file_name_from_export, check_export_permissions_and_status
 from shared.regular import regular_log
 from shared.ingest.allowed_ingest_extensions import images_allowed_file_names, videos_allowed_file_names
+from security import safe_requests
 
 def with_azure_exception_handler(f):
     def wrapper(*args):
@@ -485,7 +485,7 @@ class AzureConnector(Connector):
                 test_file_path,
                 sas
             )
-            resp = requests.get(sas_url)
+            resp = safe_requests.get(sas_url)
             if resp.status_code != 200:
                 raise Exception(
                     f"Error when accessing presigned URL: Status({resp.status_code}). Error: {resp.text}")

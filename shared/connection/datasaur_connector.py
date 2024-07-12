@@ -2,24 +2,19 @@
 from shared.regular.regular_api import *
 from shared.connection.connectors.connectors_base import Connector, with_connection
 from dataclasses import dataclass
-from functools import wraps
 from shared.database.external.external import ExternalMap
-from shared.database.task.job.job_working_dir import JobWorkingDir
-from shared.utils.task import task_complete
 from shared.connection.connection_strategy import ConnectionStrategy
 import uuid
-from shared.database.task.job.job_working_dir import JobWorkingDir
 from google.cloud import storage
 import os
 import shutil
 from shared.ingest.packet import enqueue_packet
 from shared.database.connection.connection import Connection
-from shared.utils.task.task_complete import task_complete
-import random
 import threading
 from sqlalchemy import and_
 from sqlalchemy.orm import aliased
 import requests
+from security import safe_requests
 
 def with_datasaur_exception_handler(f):
     def wrapper(*args):
@@ -107,7 +102,7 @@ class DatasaurClient:
         # (Somehow their API sometimes does not have their file on S3 when the return response)
         time.sleep(0.9)
         url = data['data']['result']['fileUrl']
-        r = requests.get(url.encode('utf-8'))
+        r = safe_requests.get(url.encode('utf-8'))
         json_data = r.json()
         return json_data
 

@@ -1,14 +1,11 @@
 # OPENCORE - ADD
-import boto3
 import traceback
 import threading
 import io
-import requests
 import urllib.parse
 
 import mimetypes
 from shared.regular.regular_api import *
-from shared.auth.OAuth2Provider import OAuth2Provider
 from shared.helpers import sessionMaker
 from shared.database.project import Project
 from shared.database.auth.member import Member
@@ -23,6 +20,7 @@ from shared.regular import regular_log
 from shared.data_tools_core_s3 import DataToolsS3
 from botocore.config import Config
 from shared.ingest.allowed_ingest_extensions import images_allowed_file_names, videos_allowed_file_names
+from security import safe_requests
 
 
 def with_s3_exception_handler(f):
@@ -260,7 +258,7 @@ class S3Connector(Connector):
 
         try:
             params = {'key': blob_name, "method": "get"}
-            result = requests.get(url = url_path, headers = headers, params = params)
+            result = safe_requests.get(url = url_path, headers = headers, params = params)
             if result.status_code == 200:
                 try:
                     data = result.json()
@@ -350,7 +348,7 @@ class S3Connector(Connector):
             url_path = f'{self.url_signer_service}/{bucket_name}'
             try:
                 params = {'key': blob_name, "method": "put"}
-                result = requests.get(url = url_path, headers = headers, params = params)
+                result = safe_requests.get(url = url_path, headers = headers, params = params)
                 if result.status_code == 200:
                     data = result.json()
                     logger.info(f'Signer Upload URL JSON {data}')
@@ -563,7 +561,7 @@ class S3Connector(Connector):
                                                                        Params = {'Bucket': bucket_name,
                                                                                  'Key': test_file_path},
                                                                        ExpiresIn = 3600 * 24 * 6)
-            resp = requests.get(signed_url, verify = not self.auth_data['disabled_ssl_verify'])
+            resp = safe_requests.get(signed_url, verify = not self.auth_data['disabled_ssl_verify'])
             if resp.status_code != 200:
                 raise Exception(
                     f"Error when accessing presigned URL: Status({resp.status_code}). Error: {resp.text}")
