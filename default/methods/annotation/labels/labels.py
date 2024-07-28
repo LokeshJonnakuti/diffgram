@@ -256,7 +256,7 @@ def label_edit(project_string_id):
         """
 
         out = 'success'
-        return json.dumps(out), 200, {'ContentType': 'application/json'}
+        return json.dumps(out), 200, {'ContentType': 'application/json', 'Content-Type': 'application/json'}
 
 
 def migrate():
