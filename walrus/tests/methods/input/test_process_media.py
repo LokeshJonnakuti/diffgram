@@ -116,76 +116,14 @@ class TestProcessMedia(testing_setup.DiffgramBaseTestCase):
 
     def test_save_raw_image_file(self):
         log = regular_log.default()
-        # Test PNG Files
-        temp = open("myfile2.png", "w")
-        with open(temp.name, 'wb') as f:
-            f.seek(63)
-            f.write(b'\x01')
-        input_obj = data_mocking.create_input(
-            {
-                'project_id': self.project.id,
-                'extension': '.png',
-                'temp_dir_path_and_filename': temp.name,
-                'temp_dir': '/tmp'
-            },
-            session = self.session)
-        pm = process_media.Process_Media(
-            input_id = input_obj.id,
-            input = input_obj,
-            project_id = self.project.id,
-            session = self.session,
-        )
-        pm.new_image = data_mocking.create_image({
-            'original_filename': 'test_img.png'
-        }, session = self.session)
-        with patch.object(process_media, 'imwrite') as mock1:
-            with patch.object(process_media.data_tools, 'upload_to_cloud_storage') as mock2:
-                new_temp_filename = pm.save_raw_image_file()
-                mock1.assert_called_with(new_temp_filename, np.asarray(pm.raw_numpy_image), compress_level = 2)
-                mock2.assert_called_with(temp_local_path = new_temp_filename,
-                                         blob_path = pm.new_image.url_signed_blob_path,
-                                         content_type = "image/jpg")
-
-        # Test JPG Files
-        temp = open("myfile3.png", "w")
-        with open(temp.name, 'wb') as f:
-            f.seek(63)
-            f.write(b'\x01')
-        input_obj = data_mocking.create_input(
-            {
-                'project_id': self.project.id,
-                'extension': '.jpg',
-                'temp_dir_path_and_filename': temp.name,
-                'temp_dir': '/tmp'
-            },
-            session = self.session)
-        pm = process_media.Process_Media(
-            input_id = input_obj.id,
-            input = input_obj,
-            project_id = self.project.id,
-            session = self.session,
-        )
-        pm.new_image = data_mocking.create_image({
-            'original_filename': 'test_img.jpg'
-        }, session = self.session)
-        with patch.object(process_media, 'imwrite') as mock1:
-            with patch.object(process_media.data_tools, 'upload_to_cloud_storage') as mock2:
-                new_temp_filename = pm.save_raw_image_file()
-                self.assertEqual(mock1.call_count, 0)
-                mock2.assert_called_with(temp_local_path = new_temp_filename,
-                                         blob_path = pm.new_image.url_signed_blob_path,
-                                         content_type = "image/jpg")
-
-        # Test BMP, TIF, TTF
-        for file_extension in ['.bmp', '.tif', '.tiff']:
-            temp = open("myfile4.png", "w")
+        with open("myfile2.png", "w") as temp:
             with open(temp.name, 'wb') as f:
                 f.seek(63)
                 f.write(b'\x01')
             input_obj = data_mocking.create_input(
                 {
                     'project_id': self.project.id,
-                    'extension': file_extension,
+                    'extension': '.png',
                     'temp_dir_path_and_filename': temp.name,
                     'temp_dir': '/tmp'
                 },
@@ -197,31 +135,91 @@ class TestProcessMedia(testing_setup.DiffgramBaseTestCase):
                 session = self.session,
             )
             pm.new_image = data_mocking.create_image({
-                'original_filename': f'test_img{file_extension}'
+                'original_filename': 'test_img.png'
             }, session = self.session)
             with patch.object(process_media, 'imwrite') as mock1:
                 with patch.object(process_media.data_tools, 'upload_to_cloud_storage') as mock2:
                     new_temp_filename = pm.save_raw_image_file()
-                    mock1.assert_called_with(new_temp_filename, np.asarray(pm.raw_numpy_image), compress_level = 3)
+                    mock1.assert_called_with(new_temp_filename, np.asarray(pm.raw_numpy_image), compress_level = 2)
                     mock2.assert_called_with(temp_local_path = new_temp_filename,
                                              blob_path = pm.new_image.url_signed_blob_path,
                                              content_type = "image/jpg")
 
+            # Test JPG Files
+            temp = open("myfile3.png", "w")
+            with open(temp.name, 'wb') as f:
+                f.seek(63)
+                f.write(b'\x01')
+            input_obj = data_mocking.create_input(
+                {
+                    'project_id': self.project.id,
+                    'extension': '.jpg',
+                    'temp_dir_path_and_filename': temp.name,
+                    'temp_dir': '/tmp'
+                },
+                session = self.session)
+            pm = process_media.Process_Media(
+                input_id = input_obj.id,
+                input = input_obj,
+                project_id = self.project.id,
+                session = self.session,
+            )
+            pm.new_image = data_mocking.create_image({
+                'original_filename': 'test_img.jpg'
+            }, session = self.session)
+            with patch.object(process_media, 'imwrite') as mock1:
+                with patch.object(process_media.data_tools, 'upload_to_cloud_storage') as mock2:
+                    new_temp_filename = pm.save_raw_image_file()
+                    self.assertEqual(mock1.call_count, 0)
+                    mock2.assert_called_with(temp_local_path = new_temp_filename,
+                                             blob_path = pm.new_image.url_signed_blob_path,
+                                             content_type = "image/jpg")
+
+            # Test BMP, TIF, TTF
+            for file_extension in ['.bmp', '.tif', '.tiff']:
+                temp = open("myfile4.png", "w")
+                with open(temp.name, 'wb') as f:
+                    f.seek(63)
+                    f.write(b'\x01')
+                input_obj = data_mocking.create_input(
+                    {
+                        'project_id': self.project.id,
+                        'extension': file_extension,
+                        'temp_dir_path_and_filename': temp.name,
+                        'temp_dir': '/tmp'
+                    },
+                    session = self.session)
+                pm = process_media.Process_Media(
+                    input_id = input_obj.id,
+                    input = input_obj,
+                    project_id = self.project.id,
+                    session = self.session,
+                )
+                pm.new_image = data_mocking.create_image({
+                    'original_filename': f'test_img{file_extension}'
+                }, session = self.session)
+                with patch.object(process_media, 'imwrite') as mock1:
+                    with patch.object(process_media.data_tools, 'upload_to_cloud_storage') as mock2:
+                        new_temp_filename = pm.save_raw_image_file()
+                        mock1.assert_called_with(new_temp_filename, np.asarray(pm.raw_numpy_image), compress_level = 3)
+                        mock2.assert_called_with(temp_local_path = new_temp_filename,
+                                                 blob_path = pm.new_image.url_signed_blob_path,
+                                                 content_type = "image/jpg")
+
     def test_route_based_on_media_type(self):
         log = regular_log.default()
-        # Test PNG Files
-        temp = open("myfile.png", "w")
-        with open(temp.name, 'wb') as f:
-            f.seek(63)
-            f.write(b'\x01')
-        input_obj = data_mocking.create_input(
-            {
-                'project_id': self.project.id,
-                'extension': '.png',
-                'temp_dir_path_and_filename': temp.name,
-                'temp_dir': '/tmp'
-            },
-            session = self.session)
+        with open("myfile.png", "w") as temp:
+            with open(temp.name, 'wb') as f:
+                f.seek(63)
+                f.write(b'\x01')
+            input_obj = data_mocking.create_input(
+                {
+                    'project_id': self.project.id,
+                    'extension': '.png',
+                    'temp_dir_path_and_filename': temp.name,
+                    'temp_dir': '/tmp'
+                },
+                session = self.session)
         pm = process_media.Process_Media(
             input_id = input_obj.id,
             input = input_obj,
@@ -260,19 +258,18 @@ class TestProcessMedia(testing_setup.DiffgramBaseTestCase):
 
     def test_process_one_audio_file(self):
         log = regular_log.default()
-        # Test PNG Files
-        temp = open("myfile.mp3", "w")
-        with open(temp.name, 'wb') as f:
-            f.seek(63)
-            f.write(b'\x01')
-        input_obj = data_mocking.create_input(
-            {
-                'project_id': self.project.id,
-                'extension': '.mp3',
-                'temp_dir_path_and_filename': temp.name,
-                'temp_dir': '/tmp'
-            },
-            session = self.session)
+        with open("myfile.mp3", "w") as temp:
+            with open(temp.name, 'wb') as f:
+                f.seek(63)
+                f.write(b'\x01')
+            input_obj = data_mocking.create_input(
+                {
+                    'project_id': self.project.id,
+                    'extension': '.mp3',
+                    'temp_dir_path_and_filename': temp.name,
+                    'temp_dir': '/tmp'
+                },
+                session = self.session)
         pm = process_media.Process_Media(
             input_id = input_obj.id,
             input = input_obj,
@@ -292,19 +289,18 @@ class TestProcessMedia(testing_setup.DiffgramBaseTestCase):
 
     def test_save_raw_audio_file(self):
         log = regular_log.default()
-        # Test PNG Files
-        temp = open("myfile.png", "w")
-        with open(temp.name, 'wb') as f:
-            f.seek(63)
-            f.write(b'\x01')
-        input_obj = data_mocking.create_input(
-            {
-                'project_id': self.project.id,
-                'extension': '.png',
-                'temp_dir_path_and_filename': temp.name,
-                'temp_dir': '/tmp'
-            },
-            session = self.session)
+        with open("myfile.png", "w") as temp:
+            with open(temp.name, 'wb') as f:
+                f.seek(63)
+                f.write(b'\x01')
+            input_obj = data_mocking.create_input(
+                {
+                    'project_id': self.project.id,
+                    'extension': '.png',
+                    'temp_dir_path_and_filename': temp.name,
+                    'temp_dir': '/tmp'
+                },
+                session = self.session)
         pm = process_media.Process_Media(
             input_id = input_obj.id,
             input = input_obj,
