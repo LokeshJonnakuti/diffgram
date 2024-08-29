@@ -484,7 +484,7 @@ class GoogleCloudStorageConnector(Connector):
                 expiration = expiration_time,
                 response_disposition = f"attachment; filename={filename}"
             )
-            resp = requests.get(url_signed)
+            resp = requests.get(url_signed, timeout=60)
             if resp.status_code != 200:
                 raise Exception(
                     f"Error when accessing presigned URL: Status({resp.status_code}). Error: {resp.text}")

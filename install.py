@@ -173,7 +173,7 @@ class DiffgramInstallTool:
                 test_file_path,
                 sas
             )
-            resp = requests.get(sas_url)
+            resp = requests.get(sas_url, timeout=60)
             if resp.status_code != 200:
                 raise Exception(
                     f"Error when accessing presigned URL: Status({resp.status_code}). Error: {resp.text}")
@@ -233,7 +233,7 @@ class DiffgramInstallTool:
                 expiration = expiration_time,
                 response_disposition = f"attachment; filename={filename}"
             )
-            resp = requests.get(url_signed)
+            resp = requests.get(url_signed, timeout=60)
             if resp.status_code != 200:
                 raise Exception(
                     f"Error when accessing presigned URL: Status({resp.status_code}). Error: {resp.text}")
@@ -295,7 +295,7 @@ class DiffgramInstallTool:
             signed_url = client.generate_presigned_url('get_object',
                                                        Params = {'Bucket': bucket_name, 'Key': test_file_path},
                                                        ExpiresIn = 3600 * 24 * 6)
-            resp = requests.get(signed_url)
+            resp = requests.get(signed_url, timeout=60)
             if resp.status_code != 200:
                 raise Exception(
                     f"Error when accessing presigned URL: Status({resp.status_code}). Error: {resp.text}")

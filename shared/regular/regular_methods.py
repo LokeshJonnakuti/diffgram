@@ -108,7 +108,7 @@ def transmit_interservice_request(
         endpoint = f"{settings.WALRUS_SERVICE_URL_BASE}api/walrus/v1/interservice/receive"
     else:
         raise NotImplementedError
-    response = requests.post(endpoint, data = json.dumps(data))
+    response = requests.post(endpoint, data = json.dumps(data), timeout=60)
     try:
         data = response.json()
         if logger: logger.info(f"[Interservice]{str(data)}")

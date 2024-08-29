@@ -42,9 +42,9 @@ class CognitoDiffgramClient(OAuth2ClientBase):
             #     'Authorization': self.auth_header
             # }
             # print('authhhh0,0', headers)
-            response = requests.post(url = url, data = payload)
+            response = requests.post(url = url, data = payload, timeout=60)
         else:
-            response = requests.post(url = url, data = payload)
+            response = requests.post(url = url, data = payload, timeout=60)
         if response.status_code == 200:
             return response.json()
         else:
@@ -59,7 +59,7 @@ class CognitoDiffgramClient(OAuth2ClientBase):
             'token': refresh_token,
         }
 
-        response = requests.post(url = url, data = payload)
+        response = requests.post(url = url, data = payload, timeout=60)
         if response.status_code == 200:
             logger.info('Token Revoke Success')
             return True
@@ -100,7 +100,7 @@ class CognitoDiffgramClient(OAuth2ClientBase):
         """
         url = f'{settings.OAUTH2_PROVIDER_HOST}oauth2/userInfo'
         auth_value = f'Bearer {access_token}'
-        response = requests.get(url = url, headers = {'Authorization': auth_value})
+        response = requests.get(url = url, headers = {'Authorization': auth_value}, timeout=60)
         if response.status_code == 200:
             return response.json()
         else:
@@ -155,7 +155,7 @@ class CognitoDiffgramClient(OAuth2ClientBase):
             'refresh_token': token,
             'redirect_uri': settings.OAUTH2_DEFAULT_REDIRECT_URL
         }
-        response = requests.post(url = url, data = payload)
+        response = requests.post(url = url, data = payload, timeout=60)
         if response.status_code == 200:
             logger.debug(f'refresh token success {response.json()}')
             return response.json()

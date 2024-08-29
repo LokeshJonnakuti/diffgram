@@ -59,8 +59,8 @@ class Communicate_Via_Email():
 
         result = requests.post(f"https://api.mailgun.net/v3/{self.domain_name}/messages",
                                auth = ("api", self.api_key),
-                               data = data
-                               )
+                               data = data, 
+                               timeout=60)
 
         return result
 

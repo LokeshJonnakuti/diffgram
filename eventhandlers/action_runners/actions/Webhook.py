@@ -58,7 +58,7 @@ class WebhookAction(ActionRunner):
             self.event_data['workflow_id'] = self.action.workflow_id
             self.event_data['action_id'] = self.action.id
             self.event_data['action_run_id'] = self.action_run.id
-            response = requests.post(json = self.event_data, url=url)
+            response = requests.post(json = self.event_data, url=url, timeout=60)
             if response.status_code == 200:
                 data = {}
                 try:
