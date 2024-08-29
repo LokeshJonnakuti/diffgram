@@ -128,8 +128,8 @@ class DataToolsGCP:
             response = requests.put(
                 url = prior_created_url,
                 data = stream,
-                headers = headers
-            )
+                headers = headers, 
+            timeout=60)
             logger.info(f"GCP Chunk Response: {response}")
         except Exception as e:
             logger.error(f"Upload TO GCP Failed: {traceback.format_exc()}")
