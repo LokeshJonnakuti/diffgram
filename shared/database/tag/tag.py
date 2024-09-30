@@ -1,6 +1,6 @@
 from shared.database.common import *
 import re
-import random
+import secrets
 
 
 class Tag(Base):
@@ -30,7 +30,7 @@ class Tag(Base):
 
     @staticmethod
     def get_random_color():
-        return "%06x" % random.randint(0, 0xFFFFFF)
+        return "%06x" % secrets.SystemRandom().randint(0, 0xFFFFFF)
 
     @staticmethod
     def get(name: str,

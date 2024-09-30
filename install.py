@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
 import platform
-import random
 import string
 import base64
 import time
@@ -18,6 +17,7 @@ from azure.storage.blob._models import BlobSasPermissions
 from azure.storage.blob._shared_access_signature import BlobSharedAccessSignature
 from google.oauth2 import service_account
 from botocore.config import Config
+import secrets
 
 try:
     from sqlalchemy import create_engine
@@ -30,7 +30,7 @@ except Exception as e:
 
 
 def create_random_string(length):
-    return ''.join(random.choice(string.ascii_lowercase + \
+    return ''.join(secrets.choice(string.ascii_lowercase + \
                                  string.digits) for x in range(length))
 
 

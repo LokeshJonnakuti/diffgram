@@ -1,5 +1,4 @@
 # OPENCORE - ADD
-import random
 import string
 
 from methods.regular.regular_api import *
@@ -8,6 +7,7 @@ from shared.database import hashing_functions
 
 from shared.database.auth.api import Auth_api
 from shared.database.auth.member import Member
+import secrets
 
 
 @routes.route('/api/v1/project/<string:project_string_id>/auth/api/new',
@@ -146,5 +146,5 @@ def create_client_auth_pair(auth):
 
 
 def create_random_string(length):
-    return ''.join(random.choice(string.ascii_lowercase + \
+    return ''.join(secrets.choice(string.ascii_lowercase + \
                                  string.digits) for x in range(length))

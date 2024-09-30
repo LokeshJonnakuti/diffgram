@@ -1,8 +1,7 @@
 from shared.database.common import *
-
-import random
 import string
 from shared.database.action.action import Action
+import secrets
 
 TIME_WINDOW_SECONDS_MAPPER = {
     '1_minute': 1 * 60,
@@ -261,6 +260,5 @@ def safe_name(name, character_limit = 10):
 def create_random_string(length):
     # Email safe, so no upper case
 
-    return ''.join(random.choice(
-        string.ascii_lowercase +
+    return ''.join(secrets.choice(string.ascii_lowercase +
         string.digits) for x in range(length))

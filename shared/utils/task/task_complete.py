@@ -1,4 +1,3 @@
-import random
 import datetime
 from shared.shared_logger import get_shared_logger
 from shared.regular import regular_log
@@ -11,6 +10,7 @@ from shared.database.source_control.working_dir import WorkingDirFileLink
 from shared.utils.task.task_update_manager import Task_Update
 from shared.database.task.task import TASK_STATUSES
 from shared.utils.task import task_assign_reviewer
+import secrets
 
 logger = get_shared_logger()
 
@@ -62,7 +62,7 @@ def send_to_review_randomly(session, task, task_update_manager):
     """
     # Review chance is a number betwen 0-1
     review_chance = task.job.review_chance
-    rand_num = random.uniform(0, 1)
+    rand_num = secrets.SystemRandom().uniform(0, 1)
 
     if rand_num <= review_chance:
         # In review Mode no sync event (unless post_review=True)
