@@ -1,10 +1,11 @@
 # OPENCORE - ADD
-import string, hashlib, hmac, random
+import string, hashlib, hmac
 import binascii
 import sys
 from time import time
 
 from shared.settings import settings
+import secrets
 
 SECRET = settings.USER_PASSWORDS_SECRET
 
@@ -55,7 +56,7 @@ def check_secure_val(secure_value):
 
 def make_salt():
 	init_salt = "jkl&&^22**j178&&"
-	random_extra_salt = ''.join(random.choice(string.ascii_lowercase) for x in range(20))
+	random_extra_salt = ''.join(secrets.choice(string.ascii_lowercase) for x in range(20))
 	return init_salt + random_extra_salt
 
 
@@ -67,7 +68,7 @@ def make_password_hash(email, password, salt=None, iterations=None):
 	salt_byte = bytearray(salt, 'utf-8')
 
 	if not iterations:
-		iterations = random.randrange(50000, 100000)
+		iterations = secrets.SystemRandom().randrange(50000, 100000)
 
 	dk = hashlib.pbkdf2_hmac('sha512', password, salt_byte, iterations)
 	hash = binascii.hexlify(dk).decode("utf-8")

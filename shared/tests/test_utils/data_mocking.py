@@ -11,7 +11,6 @@ from shared.database.labels.label_schema import LabelSchema
 from shared.database.event.event import Event
 from shared.settings import settings
 from shared.database.task.task import Task
-import random
 import string
 from sqlalchemy.orm.session import Session
 from shared.database.sync_events.sync_event import SyncEvent
@@ -39,6 +38,7 @@ from shared.database.input import Input
 from shared.database.project_migration.project_migration import ProjectMigration
 from shared.database.audio.audio_file import AudioFile
 from shared.database.permissions.roles import Role, RoleMemberObject, ValidObjectTypes
+import secrets
 
 # This line is to prevent developers to run test in other databases or enviroments. We should rethink how to handle
 # configuration data for the different deployment phases (local, testing, staging, production)
@@ -48,7 +48,7 @@ if settings.DIFFGRAM_SYSTEM_MODE != 'testing':
 
 def get_random_string(length):
     letters = string.ascii_lowercase
-    result_str = ''.join(random.choice(letters) for i in range(length))
+    result_str = ''.join(secrets.choice(letters) for i in range(length))
     return result_str
 
 

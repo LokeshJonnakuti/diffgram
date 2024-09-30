@@ -1,13 +1,14 @@
 from shared.database.auth.api import Auth_api
 from shared.database.auth.member import Member
 from shared.database.project import Project
-import random
 import string
 from shared.database import hashing_functions
 from shared.regular import regular_methods
 from shared.permissions.project_permissions import Project_permissions
+import secrets
+
 def create_random_string(length):
-    return ''.join(random.choice(string.ascii_lowercase + \
+    return ''.join(secrets.choice(string.ascii_lowercase + \
                                  string.digits) for x in range(length))
 
 

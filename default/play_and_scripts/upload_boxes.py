@@ -1,13 +1,13 @@
 from diffgram.core.core import Project
-import random
+import secrets
 
 
 def generate_random_bounding_box():
     while True:
-        x_min = random.randint(0, 2000)
-        x_max = random.randint(0, 2000)
-        y_min = random.randint(0, 2000)
-        y_max = random.randint(0, 2000)
+        x_min = secrets.SystemRandom().randint(0, 2000)
+        x_max = secrets.SystemRandom().randint(0, 2000)
+        y_min = secrets.SystemRandom().randint(0, 2000)
+        y_max = secrets.SystemRandom().randint(0, 2000)
 
         if x_min < x_max and y_min < y_max and (x_max - x_min) < 50 and (y_max - y_min) < 50:
             return {'x_min': x_min, 'x_max': x_max, 'y_min': y_min, 'y_max': y_max, "name": 'A', 'type': 'box'}
