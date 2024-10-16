@@ -9,7 +9,6 @@ import boto3
 import traceback
 import hashlib
 import uuid
-import requests
 import datetime
 
 from google.cloud import storage
@@ -18,6 +17,7 @@ from azure.storage.blob._models import BlobSasPermissions
 from azure.storage.blob._shared_access_signature import BlobSharedAccessSignature
 from google.oauth2 import service_account
 from botocore.config import Config
+from security import safe_requests
 
 try:
     from sqlalchemy import create_engine
@@ -173,7 +173,7 @@ class DiffgramInstallTool:
                 test_file_path,
                 sas
             )
-            resp = requests.get(sas_url)
+            resp = safe_requests.get(sas_url)
             if resp.status_code != 200:
                 raise Exception(
                     f"Error when accessing presigned URL: Status({resp.status_code}). Error: {resp.text}")
@@ -233,7 +233,7 @@ class DiffgramInstallTool:
                 expiration = expiration_time,
                 response_disposition = f"attachment; filename={filename}"
             )
-            resp = requests.get(url_signed)
+            resp = safe_requests.get(url_signed)
             if resp.status_code != 200:
                 raise Exception(
                     f"Error when accessing presigned URL: Status({resp.status_code}). Error: {resp.text}")
@@ -295,7 +295,7 @@ class DiffgramInstallTool:
             signed_url = client.generate_presigned_url('get_object',
                                                        Params = {'Bucket': bucket_name, 'Key': test_file_path},
                                                        ExpiresIn = 3600 * 24 * 6)
-            resp = requests.get(signed_url)
+            resp = safe_requests.get(signed_url)
             if resp.status_code != 200:
                 raise Exception(
                     f"Error when accessing presigned URL: Status({resp.status_code}). Error: {resp.text}")

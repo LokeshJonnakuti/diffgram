@@ -6,3 +6,4 @@ google-cloud-aiplatform
 azure-storage-blob==12.8.1
 python-dotenv==1.0.0
 jwt
+security==1.3.1

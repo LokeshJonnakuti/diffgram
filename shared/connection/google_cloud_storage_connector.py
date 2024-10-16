@@ -1,5 +1,4 @@
 # OPENCORE - ADD
-import requests
 import time
 import threading
 import logging
@@ -23,6 +22,7 @@ from shared.export.export_utils import generate_file_name_from_export, check_exp
 from shared.database.project import Project
 from shared.database.event.event import Event
 from shared.ingest.allowed_ingest_extensions import images_allowed_file_names, videos_allowed_file_names
+from security import safe_requests
 
 
 def with_google_exception_handler(f):
@@ -484,7 +484,7 @@ class GoogleCloudStorageConnector(Connector):
                 expiration = expiration_time,
                 response_disposition = f"attachment; filename={filename}"
             )
-            resp = requests.get(url_signed)
+            resp = safe_requests.get(url_signed)
             if resp.status_code != 200:
                 raise Exception(
                     f"Error when accessing presigned URL: Status({resp.status_code}). Error: {resp.text}")

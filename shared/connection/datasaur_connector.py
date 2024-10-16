@@ -20,6 +20,7 @@ import threading
 from sqlalchemy import and_
 from sqlalchemy.orm import aliased
 import requests
+from security import safe_requests
 
 def with_datasaur_exception_handler(f):
     def wrapper(*args):
@@ -107,7 +108,7 @@ class DatasaurClient:
         # (Somehow their API sometimes does not have their file on S3 when the return response)
         time.sleep(0.9)
         url = data['data']['result']['fileUrl']
-        r = requests.get(url.encode('utf-8'))
+        r = safe_requests.get(url.encode('utf-8'))
         json_data = r.json()
         return json_data
 

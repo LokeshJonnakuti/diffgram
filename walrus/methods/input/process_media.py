@@ -1,13 +1,12 @@
 import uuid
 
 from methods.regular.regular_api import *
+from security import safe_requests
 
 try:
     from methods.video.video_preprocess import Video_Preprocess
 except Exception as exception:
     print("Fail, Video_Preprocess: Could not import", exception)
-
-import requests
 import threading
 import tempfile
 import csv
@@ -2143,7 +2142,7 @@ class Process_Media():
             return
 
         split_url = urlsplit(self.input.url)
-        response = requests.get(self.input.url, stream = True)
+        response = safe_requests.get(self.input.url, stream = True)
 
         if response.status_code != 200:
             self.input.status = "failed"

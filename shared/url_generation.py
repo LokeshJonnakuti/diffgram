@@ -16,6 +16,7 @@ from shared.connection.s3_connector import S3Connector
 from shared.regular.regular_member import get_member
 from shared.database.auth.member import Member
 import tempfile
+from security import safe_requests
 
 logger = get_shared_logger()
 
@@ -135,7 +136,7 @@ def upload_thumbnail_for_connection_image(session: Session,
     temp_dir_path_and_filename = f"{temp_dir}/{file_name}.{extension}"
     # Get image
 
-    response = requests.get(blob_object.url_signed)
+    response = safe_requests.get(blob_object.url_signed)
     if not response.ok:
         msg = f'Failed to upload thumb. Error getting blob url {blob_object.url_signed_blob_path}'
         logger.error(msg)
