@@ -24,7 +24,7 @@ def remove_file(project_string_id):
 
         file_id = file.get('id', None)
         if file_id is None:
-            return json.dumps("id is None"), 400, {'ContentType': 'application/json'}
+            return json.dumps("id is None"), 400, {'ContentType': 'application/json', 'Content-Type': 'application/json'}
 
         existing_file = session.query(File).filter(File.id == file_id).first()
 
