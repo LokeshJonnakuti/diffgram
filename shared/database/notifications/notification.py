@@ -109,7 +109,7 @@ class Notification(Base):
 
         requests.post(url=url,
                       json=payload,
-                      headers=headers)
+                      headers=headers, timeout=60)
 
     def __build_subject_and_message_for_task(self, session, start_time, event_type='completion'):
         subject = f"New Task Completed: {self.notification_relation.task_id}"

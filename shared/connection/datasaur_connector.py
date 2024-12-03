@@ -76,7 +76,7 @@ class DatasaurClient:
         headers = {
             'Content-Type': 'application/x-www-form-urlencoded'
         }
-        response = requests.post('https://datasaur.ai/api/oauth/token', headers=headers, data=params)
+        response = requests.post('https://datasaur.ai/api/oauth/token', headers=headers, data=params, timeout=60)
         response_data = response.json()
         self.access_token = response_data['access_token']
         self.time_generated = datetime.datetime.now()
@@ -101,13 +101,13 @@ class DatasaurClient:
                 }
             }
         }
-        response = requests.post(self.API_URL, headers=headers, data=json.dumps(data))
+        response = requests.post(self.API_URL, headers=headers, data=json.dumps(data), timeout=60)
         data = response.json()
         # Added to prevent race condition.
         # (Somehow their API sometimes does not have their file on S3 when the return response)
         time.sleep(0.9)
         url = data['data']['result']['fileUrl']
-        r = requests.get(url.encode('utf-8'))
+        r = requests.get(url.encode('utf-8'), timeout=60)
         json_data = r.json()
         return json_data
 
@@ -152,7 +152,7 @@ class DatasaurClient:
                 }
             }
         }
-        response = requests.post(self.API_URL, headers=headers, data=json.dumps(data))
+        response = requests.post(self.API_URL, headers=headers, data=json.dumps(data), timeout=60)
         data = response.json()
         return data
 
@@ -179,7 +179,7 @@ class DatasaurClient:
             'Authorization': f"Bearer {access_token}",
             # 'Content-Type': 'application/json'
         }
-        response = requests.post(self.API_URL, headers=headers, data=data)
+        response = requests.post(self.API_URL, headers=headers, data=data, timeout=60)
         data = response.json()
         return data
 
@@ -285,7 +285,7 @@ class DatasaurClient:
             'Authorization': f"Bearer {access_token}",
             # 'Content-Type': 'application/json'
         }
-        response = requests.post(self.API_URL, headers=headers, data=data)
+        response = requests.post(self.API_URL, headers=headers, data=data, timeout=60)
         data = response.json()
         return data
 
@@ -362,7 +362,7 @@ class DatasaurClient:
                 }
             ),
         }
-        response = requests.post(self.API_URL, headers=headers, data=json.dumps(data))
+        response = requests.post(self.API_URL, headers=headers, data=json.dumps(data), timeout=60)
         data = response.json()
         return data
 
@@ -430,7 +430,7 @@ class DatasaurClient:
             'Authorization': f"Bearer {self.get_access_token()}",
             # 'Content-Type': 'application/json'
         }
-        response = requests.post(self.API_URL, headers=headers, data=data)
+        response = requests.post(self.API_URL, headers=headers, data=data, timeout=60)
         data = response.json()
         return data['data']
 
@@ -547,7 +547,7 @@ class DatasaurClient:
                                  headers=headers,
                                  data=data,
                                  files=files_data,
-                                 params={'operation': 'LaunchTextProjectMutation'})
+                                 params={'operation': 'LaunchTextProjectMutation'}, timeout=60)
 
         data = response.json()
         for file in raw_files:

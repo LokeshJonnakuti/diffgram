@@ -115,8 +115,8 @@ class Ingress():
                 data = request.get_data(),
                 cookies = request.cookies,
                 allow_redirects = False,
-                params = self.get_request_query_params()
-                )
+                params = self.get_request_query_params(), 
+                timeout=60)
 
 
     def route(self, path):
