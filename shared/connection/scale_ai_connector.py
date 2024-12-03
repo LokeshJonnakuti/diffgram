@@ -166,7 +166,7 @@ class ScaleAIConnector(Connector):
         response = requests.request("POST", url,
                                     json=payload,
                                     headers=headers,
-                                    auth=(self.auth_data['client_secret'], ''))
+                                    auth=(self.auth_data['client_secret'], ''), timeout=60)
         data = response.json()
 
         return {'result': data}

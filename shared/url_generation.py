@@ -135,7 +135,7 @@ def upload_thumbnail_for_connection_image(session: Session,
     temp_dir_path_and_filename = f"{temp_dir}/{file_name}.{extension}"
     # Get image
 
-    response = requests.get(blob_object.url_signed)
+    response = requests.get(blob_object.url_signed, timeout=60)
     if not response.ok:
         msg = f'Failed to upload thumb. Error getting blob url {blob_object.url_signed_blob_path}'
         logger.error(msg)
@@ -150,7 +150,7 @@ def upload_thumbnail_for_connection_image(session: Session,
         if connection.integration_name == 'amazon_aws':
             upload_resp = requests.put(url, data = file_handler.read(), timeout = 30)
         elif connection.integration_name == 'microsoft_azure':
-            upload_resp = requests.put(url, data = file_handler, headers=headers)
+            upload_resp = requests.put(url, data = file_handler, headers=headers, timeout=60)
         if not upload_resp.ok:
             msg = f'Failed to upload thumb. Error posting [{upload_resp.status_code}] {upload_resp.text}'
             logger.error(msg)

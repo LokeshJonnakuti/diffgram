@@ -2143,7 +2143,7 @@ class Process_Media():
             return
 
         split_url = urlsplit(self.input.url)
-        response = requests.get(self.input.url, stream = True)
+        response = requests.get(self.input.url, stream = True, timeout=60)
 
         if response.status_code != 200:
             self.input.status = "failed"

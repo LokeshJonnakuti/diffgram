@@ -260,7 +260,7 @@ class S3Connector(Connector):
 
         try:
             params = {'key': blob_name, "method": "get"}
-            result = requests.get(url = url_path, headers = headers, params = params)
+            result = requests.get(url = url_path, headers = headers, params = params, timeout=60)
             if result.status_code == 200:
                 try:
                     data = result.json()
@@ -350,7 +350,7 @@ class S3Connector(Connector):
             url_path = f'{self.url_signer_service}/{bucket_name}'
             try:
                 params = {'key': blob_name, "method": "put"}
-                result = requests.get(url = url_path, headers = headers, params = params)
+                result = requests.get(url = url_path, headers = headers, params = params, timeout=60)
                 if result.status_code == 200:
                     data = result.json()
                     logger.info(f'Signer Upload URL JSON {data}')
@@ -563,7 +563,7 @@ class S3Connector(Connector):
                                                                        Params = {'Bucket': bucket_name,
                                                                                  'Key': test_file_path},
                                                                        ExpiresIn = 3600 * 24 * 6)
-            resp = requests.get(signed_url, verify = not self.auth_data['disabled_ssl_verify'])
+            resp = requests.get(signed_url, verify = not self.auth_data['disabled_ssl_verify'], timeout=60)
             if resp.status_code != 200:
                 raise Exception(
                     f"Error when accessing presigned URL: Status({resp.status_code}). Error: {resp.text}")
